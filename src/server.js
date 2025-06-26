@@ -8,7 +8,9 @@ app.use(cors());
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 // Kết nối MongoDB
-
+app.get("/test-auth", (req, res) => {
+  res.send("Auth route is working");
+});
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log("✅ MongoDB connected"))
   .catch((err) => console.error("❌ MongoDB connection error:", err));
