@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config(); // thêm dòng này trên cùng
-const authRoutes = require("./src/routes/auth");
+const authRoutes = require("./routes/auth");
 
 const app = express();
 app.use(cors());
