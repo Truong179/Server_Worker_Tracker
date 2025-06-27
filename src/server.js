@@ -46,11 +46,16 @@ app.post("/api/workouts", async (req, res) => {
 // API lấy dữ liệu theo ngày
 app.get("/api/workouts/:date/:dayCode", async (req, res) => {
   const { date, dayCode } = req.params;
-  const record = await Workout.findOne({ date, dayCode });
-  if (record) {
-    res.json(record);
-  } else {
-    res.json({ checked: [] });
+
+  try {
+    const record = await Workout.findOne({ date, dayCode }); // <-- lấy đúng ngày
+    if (record) {
+      res.json(record);
+    } else {
+      res.json({ checked: [] });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 
