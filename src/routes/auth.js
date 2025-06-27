@@ -26,6 +26,7 @@ router.post("/register", async (req, res) => {
 // Đăng nhập
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
+
   try {
     const user = await User.findOne({ username });
     if (!user) return res.status(400).json({ error: "Sai tài khoản" });
@@ -33,10 +34,17 @@ router.post("/login", async (req, res) => {
     const match = await bcrypt.compare(password, user.password);
     if (!match) return res.status(400).json({ error: "Sai mật khẩu" });
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "2h",
-    });
-    res.json({ token });
+    if (!process.env.JWT_SECRET) {
+      throw new Error("Thiếu JWT_SECRET trong .env");
+    }
+
+    const token = jwt.sign(
+      { id: user._id, username: user.username },
+      process.env.JWT_SECRET,
+      { expiresIn: "2h" }
+    );
+
+    res.json({ token, username: user.username });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
